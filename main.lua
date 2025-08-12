@@ -8,6 +8,8 @@ if game.PlaceId == 90462358603255 then
     local player = game.Players.LocalPlayer
     local monstersFolder = workspace:WaitForChild("Debris"):WaitForChild("Monsters")
 
+    local targetPosition = Vector3.new(-91.9083, 16.8344, 524.727)
+
     local function autofarm()
         spawn(function()
             while _G.AutoFarm do
@@ -18,6 +20,10 @@ if game.PlaceId == 90462358603255 then
                     task.wait(1)
                     continue
                 end
+
+                -- Teleport player to the target location
+                hrp.CFrame = CFrame.new(targetPosition)
+                task.wait(0.1)
 
                 for _, enemy in pairs(monstersFolder:GetChildren()) do
                     local hum = enemy:FindFirstChild("Humanoid")
