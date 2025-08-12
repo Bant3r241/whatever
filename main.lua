@@ -21,10 +21,13 @@ if game.PlaceId == 90462358603255 then
                     continue
                 end
 
-                -- Teleport player to the target location
-                hrp.CFrame = CFrame.new(targetPosition)
-                task.wait(0.1)
+                -- Ensure the teleportation to target position happens only once
+                if hrp.Position ~= targetPosition then
+                    hrp.CFrame = CFrame.new(targetPosition)
+                    task.wait(0.1)  -- short delay to ensure position is set
+                end
 
+                -- Now handle enemy interactions
                 for _, enemy in pairs(monstersFolder:GetChildren()) do
                     local hum = enemy:FindFirstChild("Humanoid")
                     local enemyHRP = enemy:FindFirstChild("HumanoidRootPart")
