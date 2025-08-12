@@ -10,6 +10,9 @@ if game.PlaceId == 90462358603255 then
 
     local targetPosition = Vector3.new(-91.9083, 16.8344, 524.727)
 
+    -- Set a health threshold (you can change this value as needed)
+    local maxEnemyHealth = 10000  -- Enemies with health above this value will be ignored
+
     local function autofarm()
         spawn(function()
             while _G.AutoFarm do
@@ -21,21 +24,27 @@ if game.PlaceId == 90462358603255 then
                     continue
                 end
 
-                -- Ensure the teleportation to target position happens only once
+                -- Ensure teleportation to target position happens only once
                 if hrp.Position ~= targetPosition then
                     hrp.CFrame = CFrame.new(targetPosition)
                     task.wait(0.1)  -- short delay to ensure position is set
                 end
 
-                -- Now handle enemy interactions
+                -- Iterate through the enemies in the monsters folder
                 for _, enemy in pairs(monstersFolder:GetChildren()) do
                     local hum = enemy:FindFirstChild("Humanoid")
                     local enemyHRP = enemy:FindFirstChild("HumanoidRootPart")
                     if hum and enemyHRP and hum.Health > 0 then
+                        -- Skip enemies that are too strong (health > maxEnemyHealth)
+                        if hum.Health > maxEnemyHealth then
+                            continue  -- Skip this enemy
+                        end
+
                         print("Teleporting to enemy:", enemy.Name)
                         hrp.CFrame = enemyHRP.CFrame * CFrame.new(0, 0, -3)
                         task.wait(0.1)
 
+                        -- Attack the enemy
                         punchEvent:FireServer({{Id = enemy.Name, Action = "_Mouse_Click"}})
                         repeat task.wait() until hum.Health <= 0 or not enemy:IsDescendantOf(monstersFolder)
                     end
