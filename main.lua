@@ -11,12 +11,22 @@ if game.PlaceId == 90462358603255 then
     local function autofarm()
         spawn(function()
             while _G.AutoFarm do
+                local char = player.Character
+                local hrp = char and char:FindFirstChild("HumanoidRootPart")
+                if not hrp then
+                    warn("HumanoidRootPart not found!")
+                    task.wait(1)
+                    continue
+                end
+
                 for _, enemy in pairs(enemiesFolder:GetChildren()) do
                     local hum = enemy:FindFirstChild("Humanoid")
-                    local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-                    if hum and hrp and hum.Health > 0 and enemy:FindFirstChild("HumanoidRootPart") then
-                        hrp.CFrame = enemy.HumanoidRootPart.CFrame * CFrame.new(0, 0, -3)
+                    local enemyHRP = enemy:FindFirstChild("HumanoidRootPart")
+                    if hum and enemyHRP and hum.Health > 0 then
+                        print("Teleporting to enemy:", enemy.Name)
+                        hrp.CFrame = enemyHRP.CFrame * CFrame.new(0, 0, -3)
                         task.wait(0.1)
+
                         punchEvent:FireServer({{Id = enemy.Name, Action = "_Mouse_Click"}})
                         repeat task.wait() until hum.Health <= 0 or not enemy:IsDescendantOf(enemiesFolder)
                     end
@@ -37,4 +47,3 @@ if game.PlaceId == 90462358603255 then
     })
 
     OrionLib:Init()
-end
