@@ -6,7 +6,7 @@ if game.PlaceId == 90462358603255 then
 
     local punchEvent = game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("To_Server")
     local player = game.Players.LocalPlayer
-    local enemiesFolder = workspace:WaitForChild("3. Bleach - Soul Society Monster Pads")
+    local monstersFolder = workspace:WaitForChild("Debris"):WaitForChild("Monsters")
 
     local function autofarm()
         spawn(function()
@@ -19,7 +19,7 @@ if game.PlaceId == 90462358603255 then
                     continue
                 end
 
-                for _, enemy in pairs(enemiesFolder:GetChildren()) do
+                for _, enemy in pairs(monstersFolder:GetChildren()) do
                     local hum = enemy:FindFirstChild("Humanoid")
                     local enemyHRP = enemy:FindFirstChild("HumanoidRootPart")
                     if hum and enemyHRP and hum.Health > 0 then
@@ -28,7 +28,7 @@ if game.PlaceId == 90462358603255 then
                         task.wait(0.1)
 
                         punchEvent:FireServer({{Id = enemy.Name, Action = "_Mouse_Click"}})
-                        repeat task.wait() until hum.Health <= 0 or not enemy:IsDescendantOf(enemiesFolder)
+                        repeat task.wait() until hum.Health <= 0 or not enemy:IsDescendantOf(monstersFolder)
                     end
                 end
                 task.wait(1)
