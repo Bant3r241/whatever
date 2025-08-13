@@ -5,6 +5,7 @@ if game.PlaceId == 90462358603255 then
 
     
     local AutoFarm = Window:MakeTab({Name="AutoFarm", Icon="rbxassetid://4299432428", PremiumOnly=false})
-
+    
+end
     
     OrionLib:Init()
