@@ -1,7 +1,8 @@
 if game.PlaceId == 90462358603255 then
     local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/jensonhirst/Orion/main/source'))()
-    local Window = OrionLib:MakeWindow({Name="ABI │ Anime Eternal",HidePremium=false,IntroEnabled=false,IntroText="ABI",SaveConfig=true,ConfigFolder="XlurConfig"})
-
+    local Window = OrionLib:MakeWindow({Name="ABI │ Anime Eternal", HidePremium=false, IntroEnabled=false, IntroText="ABI", SaveConfig=true, ConfigFolder="XlurConfig"})
+    
+    
     local AutoFarm = Window:MakeTab({Name="AutoFarm", Icon="rbxassetid://4299432428", PremiumOnly=false})
 
     local coords = {
@@ -11,22 +12,20 @@ if game.PlaceId == 90462358603255 then
     }
 
     AutoFarm:AddDropdown({
-        Name = "World 1", 
-        Default = "Kriluni", 
-        Options = { "Kriluni" }, 
-        Callback = function(selected)
-            if selected == "Kriluni" then
-                local i = 1
-                local function teleport()
-                    if i <= #coords then
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(coords[i][1], coords[i][2], coords[i][3])
-                        repeat wait(1) until -- Condition to check if enemy is defeated, e.g., enemy health == 0
-                        i = i + 1
-                        teleport()
-                    end
+        Name = "World 1", Default = "Kriluni", Options = { "Kriluni" }, 
+        Callback = function() 
+            local i = 1
+            local function teleport()
+                if i <= #coords then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(coords[i][1], coords[i][2], coords[i][3])
+                    repeat wait(1) until -- Add enemy defeat condition here
+                    i = i + 1
+                    teleport()
                 end
-                teleport()
             end
+            teleport()
         end
+    })
 
     OrionLib:Init()
+end
