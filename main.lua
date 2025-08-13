@@ -28,6 +28,5 @@ if game.PlaceId == 90462358603255 then
                 teleport()
             end
         end
-    })
 
     OrionLib:Init()
