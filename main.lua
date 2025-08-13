@@ -13,6 +13,7 @@ if game.PlaceId == 90462358603255 then
 
     local isDropdownActive = false
     local isTeleportActive = false
+    local currentCoordIndex = 1
 
     local coords = {
         {-79.5, 16.1, 514.4}, {-92.1, 16.1, 524.2}, {-71.5, 16.1, 542.1}, {-86.7, 16.1, 552.1},
@@ -20,16 +21,35 @@ if game.PlaceId == 90462358603255 then
         {-180.1, 16.1, 439.2}, {-204.9, 16.1, 448.0}
     }
 
+    local function fireEvent(id)
+        local args = {
+            {
+                Id = id,
+                Action = "_Mouse_Click"
+            }
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("To_Server"):FireServer(unpack(args))
+    end
+
     MainTab:AddDropdown({
         Name = "World 1", 
         Default = "None", 
         Options = { "None", "Kriluni" }, 
         Callback = function(selected)
             if isDropdownActive then
-                if selected == "Kriluni" and isTeleportActive then
-                    for i = 1, #coords do
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(coords[i][1], coords[i][2], coords[i][3])
-                        wait(1)
+                if selected == "Kriluni" then
+                    while isTeleportActive do
+                        if currentCoordIndex <= #coords then
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(coords[currentCoordIndex][1], coords[currentCoordIndex][2], coords[currentCoordIndex][3])
+                            wait(1)
+                            local id = "f407-191337c22ece19f43ccf6d5acf7a" .. currentCoordIndex
+                            fireEvent(id)
+                            game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("To_Server").OnClientEvent:Wait()
+                            currentCoordIndex = currentCoordIndex + 1
+                        else
+                            print("All coordinates completed.")
+                            break
+                        end
                     end
                 elseif selected == "None" then
                     print("No world selected")
