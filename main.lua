@@ -8,14 +8,32 @@ if not success then
 end
 
 if game.PlaceId == 90462358603255 then
-    local Window = OrionLib:MakeWindow({Name="ABI │ Catch A Brainrot", HidePremium=false, IntroEnabled=false, IntroText="ABI", SaveConfig=true, ConfigFolder="XlurConfig"})
+    local Window = OrionLib:MakeWindow({Name="ABI │ Anime Eternals", HidePremium=false, IntroEnabled=false, IntroText="ABI", SaveConfig=true, ConfigFolder="XlurConfig"})
     local MainTab = Window:MakeTab({Name="AutoFarm", Icon="rbxassetid://4299432428", PremiumOnly=false})
 
+    local isDropdownActive = false
+
+    MainTab:AddToggle({
+        Name = "Activate Dropdown", 
+        Default = false, 
+        Callback = function(value)
+            isDropdownActive = value
+        end
+    })
+
     MainTab:AddDropdown({
-        Name = "World 1", Default = "Kriluni", Options = { "Kriluni" }, 
-        Callback = function(selected) 
-            if selected == "Kriluni" then
-                print("World 1 - Kriluni selected")  -- Replace this with your actual functionality
+        Name = "World 1", 
+        Default = "None", 
+        Options = { "None", "Kriluni" }, 
+        Callback = function(selected)
+            if isDropdownActive then
+                if selected == "Kriluni" then
+                    print("World 1 - Kriluni selected")
+                elseif selected == "None" then
+                    print("No world selected")
+                end
+            else
+                print("Dropdown is inactive.")
             end
         end
     })
