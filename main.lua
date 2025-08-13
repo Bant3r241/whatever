@@ -4,7 +4,7 @@ if game.PlaceId == 82706969044553 then
 
 
     
-    local MainTab = Window:MakeTab({Name="Main", Icon="rbxassetid://4299432428", PremiumOnly=false})
+    local AutoFarm = Window:MakeTab({Name="Main", Icon="rbxassetid://4299432428", PremiumOnly=false})
 
     
     OrionLib:Init()
