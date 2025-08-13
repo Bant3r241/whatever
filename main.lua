@@ -12,6 +12,7 @@ if game.PlaceId == 90462358603255 then
     local MainTab = Window:MakeTab({Name="AutoFarm", Icon="rbxassetid://4299432428", PremiumOnly=false})
 
     local isDropdownActive = false
+    local isTeleportActive = false
 
     local coords = {
         {-79.5, 16.1, 514.4}, {-92.1, 16.1, 524.2}, {-71.5, 16.1, 542.1}, {-86.7, 16.1, 552.1},
@@ -25,10 +26,10 @@ if game.PlaceId == 90462358603255 then
         Options = { "None", "Kriluni" }, 
         Callback = function(selected)
             if isDropdownActive then
-                if selected == "Kriluni" then
+                if selected == "Kriluni" and isTeleportActive then
                     for i = 1, #coords do
                         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(coords[i][1], coords[i][2], coords[i][3])
-                        wait(1)  -- Wait a second before teleporting to the next coordinate
+                        wait(1)
                     end
                 elseif selected == "None" then
                     print("No world selected")
@@ -36,6 +37,14 @@ if game.PlaceId == 90462358603255 then
             else
                 print("Dropdown is inactive.")
             end
+        end
+    })
+
+    MainTab:AddToggle({
+        Name = "Activate Teleport", 
+        Default = false, 
+        Callback = function(value)
+            isTeleportActive = value
         end
     })
 
