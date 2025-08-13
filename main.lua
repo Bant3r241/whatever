@@ -11,7 +11,6 @@ if game.PlaceId == 90462358603255 then
     local Window = OrionLib:MakeWindow({Name="ABI │ Anime Eternals", HidePremium=false, IntroEnabled=false, IntroText="ABI", SaveConfig=true, ConfigFolder="XlurConfig"})
     local MainTab = Window:MakeTab({Name="AutoFarm", Icon="rbxassetid://4299432428", PremiumOnly=false})
 
-    local isDropdownActive = false
     local isTeleportActive = false
     local currentCoordIndex = 1
 
@@ -36,26 +35,22 @@ if game.PlaceId == 90462358603255 then
         Default = "None", 
         Options = { "None", "Kriluni" }, 
         Callback = function(selected)
-            if isDropdownActive then
-                if selected == "Kriluni" then
-                    while isTeleportActive do
-                        if currentCoordIndex <= #coords then
-                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(coords[currentCoordIndex][1], coords[currentCoordIndex][2], coords[currentCoordIndex][3])
-                            wait(1)
-                            local id = "f407-191337c22ece19f43ccf6d5acf7a" .. currentCoordIndex
-                            fireEvent(id)
-                            game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("To_Server").OnClientEvent:Wait()
-                            currentCoordIndex = currentCoordIndex + 1
-                        else
-                            print("All coordinates completed.")
-                            break
-                        end
+            if selected == "Kriluni" then
+                while isTeleportActive do
+                    if currentCoordIndex <= #coords then
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(coords[currentCoordIndex][1], coords[currentCoordIndex][2], coords[currentCoordIndex][3])
+                        wait(1)
+                        local id = "f407-191337c22ece19f43ccf6d5acf7a" .. currentCoordIndex
+                        fireEvent(id)
+                        game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("To_Server").OnClientEvent:Wait()
+                        currentCoordIndex = currentCoordIndex + 1
+                    else
+                        print("All coordinates completed.")
+                        break
                     end
-                elseif selected == "None" then
-                    print("No world selected")
                 end
-            else
-                print("Dropdown is inactive.")
+            elseif selected == "None" then
+                print("No world selected")
             end
         end
     })
@@ -65,14 +60,6 @@ if game.PlaceId == 90462358603255 then
         Default = false, 
         Callback = function(value)
             isTeleportActive = value
-        end
-    })
-
-    MainTab:AddToggle({
-        Name = "Activate Dropdown", 
-        Default = false, 
-        Callback = function(value)
-            isDropdownActive = value
         end
     })
 
