@@ -4,7 +4,8 @@ local MarketplaceService = game:GetService("MarketplaceService")
 
 -- Game Info
 local GAMENAME = MarketplaceService:GetProductInfo(game.PlaceId).Name
-local PlayerCount = #Players:GetPlayers()
+local PlayerCount = #Players:GetPlayers()  -- Current player count
+local MaxPlayers = game:GetService("Players").MaxPlayers  -- Max players (usually 8, unless configured differently)
 
 -- Extract JobId UUID
 local function extractJobId(jobId)
@@ -101,12 +102,12 @@ local function createWebhookData()
                 ["description"] = string.format(
                     "__[Game Info](https://www.roblox.com/games/%d)__" ..
                     "\n**Game:** %s" ..
-                    "\n\n**Server Player Count:** %d" ..
+                    "\n\n**Player Count:** %d/%d" ..
                     "\n\n**Best Brainrot Name:** %s" ..
                     "\n**Money per second:** %s" ..
                     "\n\n**JobId:**```%s```",
                     game.PlaceId, GAMENAME,
-                    PlayerCount,
+                    PlayerCount, MaxPlayers,
                     bestBrainrot.name,
                     bestBrainrot.raw,
                     ConsoleJobId
