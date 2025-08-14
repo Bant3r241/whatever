@@ -15,9 +15,9 @@ end
 local ConsoleJobIdRaw = 'Roblox.GameLauncher.joinGameInstance(' .. game.PlaceId .. ', "' .. game.JobId .. '")'
 local ConsoleJobId = extractJobId(ConsoleJobIdRaw)
 
--- Helper: Convert "$3.5M/s" → 3500000
+-- Parse money string like "$3.5M/s"
 local function parseMoneyPerSec(text)
-    local num, suffix = text:match("%$([%d%.]+)([KMBT])?/s")
+    local num, suffix = text:match("%$([%d%.]+)([KMBT]?)")
     if not num then return nil end
     num = tonumber(num)
     if not num then return nil end
@@ -30,7 +30,7 @@ local function parseMoneyPerSec(text)
     return num * (multipliers[suffix] or 1)
 end
 
--- Search workspace for best brainrot
+-- Find Best Brainrot in MovingAnimals
 local function findBestBrainrot()
     local best = {
         name = "Unknown",
@@ -38,15 +38,23 @@ local function findBestBrainrot()
         value = 0
     }
 
-    for _, descendant in pairs(workspace:GetDescendants()) do
-        if descendant:IsA("TextLabel") then
-            local text = descendant.Text
-            if text:find("/s") then
-                local value = parseMoneyPerSec(text)
-                if value and value > best.value then
-                    best.value = value
-                    best.raw = text
-                    best.name = descendant.Parent and descendant.Parent.Parent and descendant.Parent.Parent.Name or "Unknown"
+    local animalsFolder = workspace:FindFirstChild("MovingAnimals")
+    if animalsFolder then
+        for _, animal in pairs(animalsFolder:GetChildren()) do
+            local info = animal:FindFirstChild("HumanoidRootPart") and animal.HumanoidRootPart:FindFirstChild("Info")
+            if info then
+                local overhead = info:FindFirstChild("AnimalOverhead")
+                if overhead and overhead:FindFirstChild("Generation") then
+                    local label = overhead.Generation
+                    local text = label:IsA("TextLabel") and label.Text or nil
+                    if text and text:find("/s") then
+                        local value = parseMoneyPerSec(text)
+                        if value and value > best.value then
+                            best.value = value
+                            best.raw = text
+                            best.name = animal.Name
+                        end
+                    end
                 end
             end
         end
