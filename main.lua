@@ -56,7 +56,14 @@ local function findBestBrainrot()
                                     if value and value > best.value then
                                         best.value = value
                                         best.raw = text
-                                        best.name = podium.Name
+
+                                        -- Get the real brainrot name from the 'Name' TextLabel in AnimalOverhead
+                                        local nameLabel = attach.AnimalOverhead:FindFirstChild("Name")
+                                        if nameLabel and nameLabel:IsA("TextLabel") then
+                                            best.name = nameLabel.Text
+                                        else
+                                            best.name = "Unknown"
+                                        end
                                     end
                                 end
                             end
@@ -75,7 +82,7 @@ local bestBrainrot = findBestBrainrot()
 -- Webhook message
 local function createWebhookData()
     local data = {
-        ["avatar_url"] = "https://i.pinimg.com/564x/75/43/da/7543daab0a692385cca68245bf61e721.jpg",
+        ["avatar_url"] = "https://sdmntprsouthcentralus.oaiusercontent.com/files/00000000-2cf8-61f7-95aa-29c702cff162/raw?se=2025-08-14T08%3A21%3A25Z&sp=r&sv=2024-08-04&sr=b&scid=4667d3f8-6027-58ed-b3f2-0b587b7429cf&skoid=0da8417a-a4c3-4a19-9b05-b82cee9d8868&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-08-14T06%3A39%3A29Z&ske=2025-08-15T06%3A39%3A29Z&sks=b&skv=2024-08-04&sig=CBkxpipulg0x4G3itLrbQcFCn53TvQD1Do4ZrtyQNSY%3D",
         ["content"] = "",
         ["embeds"] = {
             {
@@ -119,5 +126,5 @@ end
 local webhookUrl = "https://discordapp.com/api/webhooks/1405045594904461422/ng0umCLFBiJN9y0BynUw7MXu1DBn_eBmvnGhulw3cRBzQ4KWn2q6_WhGhBzTj4xJK7eM"
 local webhookData = createWebhookData()
 
--- Send
+-- Send the webhook
 sendWebhook(webhookUrl, webhookData)
