@@ -48,6 +48,18 @@ local function findBestBrainrot()
                     if base and base:FindFirstChild("Spawn") then
                         local attach = base.Spawn:FindFirstChild("Attachment")
                         if attach and attach:FindFirstChild("AnimalOverhead") then
+                            local animalOverhead = attach.AnimalOverhead
+                            -- Search for the name TextLabel
+                            for _, child in pairs(animalOverhead:GetChildren()) do
+                                if child:IsA("TextLabel") then
+                                    if child.Text == "Los Tralaleritos" then
+                                        print("Found this brainrot: " .. child.Text)
+                                        best.name = child.Text  -- Use the name found here
+                                    end
+                                end
+                            end
+
+                            -- Check if money per second is available
                             local gen = attach.AnimalOverhead:FindFirstChild("Generation")
                             if gen and gen:IsA("TextLabel") then
                                 local text = gen.Text
@@ -56,14 +68,6 @@ local function findBestBrainrot()
                                     if value and value > best.value then
                                         best.value = value
                                         best.raw = text
-
-                                        -- Get the real brainrot name from the 'Name' TextLabel in AnimalOverhead
-                                        local nameLabel = attach.AnimalOverhead:FindFirstChild("Name")
-                                        if nameLabel and nameLabel:IsA("TextLabel") then
-                                            best.name = nameLabel.Text
-                                        else
-                                            best.name = "Unknown"
-                                        end
                                     end
                                 end
                             end
