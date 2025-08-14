@@ -33,11 +33,12 @@ end
 -- Get Best Brainrot from workspace.Plots only
 local function findBestBrainrot()
     local best = {
-        name = "Unknown",
-        raw = "N/A",
-        value = 0
+        name = "Unknown", -- Default name
+        raw = "N/A",  -- Default money per second
+        value = 0     -- Default value (money per second)
     }
 
+    -- Iterate through all plots in the workspace
     local plotsFolder = workspace:FindFirstChild("Plots")
     if plotsFolder then
         for _, plot in pairs(plotsFolder:GetChildren()) do
@@ -50,12 +51,10 @@ local function findBestBrainrot()
                         if attach and attach:FindFirstChild("AnimalOverhead") then
                             local animalOverhead = attach.AnimalOverhead
                             -- Search for the name TextLabel
+                            local nameLabel
                             for _, child in pairs(animalOverhead:GetChildren()) do
-                                if child:IsA("TextLabel") then
-                                    if child.Text == "Los Tralaleritos" then
-                                        print("Found this brainrot: " .. child.Text)
-                                        best.name = child.Text  -- Use the name found here
-                                    end
+                                if child:IsA("TextLabel") and child.Name == "Name" then
+                                    nameLabel = child
                                 end
                             end
 
@@ -66,8 +65,13 @@ local function findBestBrainrot()
                                 if text and text:find("/s") then
                                     local value = parseMoneyPerSec(text)
                                     if value and value > best.value then
+                                        -- Update the best brainrot if we find a higher earning one
                                         best.value = value
                                         best.raw = text
+                                        -- Set the name dynamically based on the found name label
+                                        if nameLabel then
+                                            best.name = nameLabel.Text
+                                        end
                                     end
                                 end
                             end
