@@ -87,7 +87,7 @@ local function createWebhookData()
                     "__[Game Info](https://www.roblox.com/games/%d)__" ..
                     "\n**Game:** %s" ..
                     "\n\n**Server Player Count:** %d" ..
-                    "\n\n**Best Brainrot:** %s" ..
+                    "\n\n**Name:** %s" ..
                     "\n**Money per second:** %s" ..
                     "\n\n**JobId:**```%s```",
                     game.PlaceId, GAMENAME,
