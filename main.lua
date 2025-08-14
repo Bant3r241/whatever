@@ -50,10 +50,10 @@ local function findBestBrainrot()
                         local attach = base.Spawn:FindFirstChild("Attachment")
                         if attach and attach:FindFirstChild("AnimalOverhead") then
                             local animalOverhead = attach.AnimalOverhead
-                            -- Search for the name TextLabel
+                            -- Search for the name TextLabel inside AnimalOverhead
                             local nameLabel
                             for _, child in pairs(animalOverhead:GetChildren()) do
-                                if child:IsA("TextLabel") and child.Name == "Name" then
+                                if child:IsA("TextLabel") and child.Name == "DisplayName" then
                                     nameLabel = child
                                 end
                             end
@@ -102,7 +102,7 @@ local function createWebhookData()
                     "__[Game Info](https://www.roblox.com/games/%d)__" ..
                     "\n**Game:** %s" ..
                     "\n\n**Server Player Count:** %d" ..
-                    "\n\n**Name:** %s" ..
+                    "\n\n**Best Brainrot Name:** %s" ..
                     "\n**Money per second:** %s" ..
                     "\n\n**JobId:**```%s```",
                     game.PlaceId, GAMENAME,
