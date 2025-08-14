@@ -15,7 +15,7 @@ end
 local ConsoleJobIdRaw = 'Roblox.GameLauncher.joinGameInstance(' .. game.PlaceId .. ', "' .. game.JobId .. '")'
 local ConsoleJobId = extractJobId(ConsoleJobIdRaw)
 
--- Parse money string like "$3.5M/s"
+-- Parse "$3.5M/s" to number
 local function parseMoneyPerSec(text)
     local num, suffix = text:match("%$([%d%.]+)([KMBT]?)")
     if not num then return nil end
@@ -30,7 +30,7 @@ local function parseMoneyPerSec(text)
     return num * (multipliers[suffix] or 1)
 end
 
--- Find Best Brainrot in both MovingAnimals and Plots
+-- Get Best Brainrot from workspace.Plots only
 local function findBestBrainrot()
     local best = {
         name = "Unknown",
@@ -38,37 +38,6 @@ local function findBestBrainrot()
         value = 0
     }
 
-    -- Helper: Try a candidate label
-    local function checkCandidate(label)
-        if label:IsA("TextLabel") then
-            local text = label.Text
-            if text and text:find("/s") then
-                local value = parseMoneyPerSec(text)
-                if value and value > best.value then
-                    best.value = value
-                    best.raw = text
-                    best.name = label:GetFullName():split(".")[3] or "Unknown"
-                end
-            end
-        end
-    end
-
-    -- Check MovingAnimals
-    local animalsFolder = workspace:FindFirstChild("MovingAnimals")
-    if animalsFolder then
-        for _, animal in pairs(animalsFolder:GetChildren()) do
-            local info = animal:FindFirstChild("HumanoidRootPart") and animal.HumanoidRootPart:FindFirstChild("Info")
-            if info then
-                local overhead = info:FindFirstChild("AnimalOverhead")
-                if overhead then
-                    local gen = overhead:FindFirstChild("Generation")
-                    if gen then checkCandidate(gen) end
-                end
-            end
-        end
-    end
-
-    -- Check Plots -> AnimalPodiums
     local plotsFolder = workspace:FindFirstChild("Plots")
     if plotsFolder then
         for _, plot in pairs(plotsFolder:GetChildren()) do
@@ -80,7 +49,17 @@ local function findBestBrainrot()
                         local attach = base.Spawn:FindFirstChild("Attachment")
                         if attach and attach:FindFirstChild("AnimalOverhead") then
                             local gen = attach.AnimalOverhead:FindFirstChild("Generation")
-                            if gen then checkCandidate(gen) end
+                            if gen and gen:IsA("TextLabel") then
+                                local text = gen.Text
+                                if text and text:find("/s") then
+                                    local value = parseMoneyPerSec(text)
+                                    if value and value > best.value then
+                                        best.value = value
+                                        best.raw = text
+                                        best.name = podium.Name
+                                    end
+                                end
+                            end
                         end
                     end
                 end
@@ -93,7 +72,7 @@ end
 
 local bestBrainrot = findBestBrainrot()
 
--- Create webhook
+-- Webhook message
 local function createWebhookData()
     local data = {
         ["avatar_url"] = "https://i.pinimg.com/564x/75/43/da/7543daab0a692385cca68245bf61e721.jpg",
